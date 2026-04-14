@@ -1,1 +1,49 @@
-<h1>My Portfolio</h1>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>My Files Launcher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            display: block;
+            width: 300px;
+            margin: 10px auto;
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Запуск My Files</h2>
+
+<button onclick="openIntent('intent://#Intent;component=com.sec.android.app.myfiles/com.sec.android.app.myfiles.common.MainActivity;end')">
+    Відкрити (MainActivity)
+</button>
+
+<button onclick="openIntent('intent://#Intent;package=com.sec.android.app.myfiles;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end')">
+    Відкрити (MAIN + LAUNCHER)
+</button>
+
+<button onclick="openIntent('intent://com.sec.android.app.myfiles/#Intent;scheme=android-app;end')">
+    Відкрити (android-app схема)
+</button>
+
+<button onclick="openIntent('intent://#Intent;component=com.sec.android.app.myfiles/com.sec.android.app.myfiles.common.MainActivity;action=android.intent.action.VIEW;end')">
+    Відкрити (VIEW action)
+</button>
+
+<script>
+function openIntent(url) {
+    window.location.href = url;
+}
+</script>
+
+</body>
+</html>
