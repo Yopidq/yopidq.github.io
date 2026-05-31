@@ -1,1 +1,138 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Model Viewer</title>
 
+<script type="module"
+src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js">
+</script>
+
+<style>
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+model-viewer {
+    width: 100%;
+    height: 100vh;
+    background: #f5f5f5;
+    container-type: size;
+}
+
+.controls {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    bottom: 16px;
+    left: 16px;
+    z-index: 10;
+    background: rgba(255,255,255,0.9);
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.controls div {
+    margin: 3px 0;
+}
+
+.custom-ar-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background-color: white;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #1a73e8;
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    cursor: pointer;
+    z-index: 10;
+    transform: translateY(calc(100cqh - 100% - 32px));
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@container (max-width: 700px) {
+    .custom-ar-button {
+        transform: translateY(0px);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<model-viewer
+    id="scale"
+    alt="3D Model"
+    src="models/wood_carving_sculpture_mishka_photogrammetry.glb"
+    camera-controls
+    touch-action="pan-y"
+    auto-rotate
+    ar>
+
+    <button slot="ar-button" class="custom-ar-button">
+        View in AR
+    </button>
+
+    <div class="controls">
+        <div>Reported DPR: <span id="reportedDpr">-</span></div>
+        <div>Rendered DPR: <span id="renderedDpr">-</span></div>
+        <div>Minimum DPR: <span id="minimumDpr">-</span></div>
+        <div>Rendered width: <span id="pixelWidth">-</span></div>
+        <div>Rendered height: <span id="pixelHeight">-</span></div>
+        <div>Reason: <span id="reason">-</span></div>
+        <div>Minimum scale: <span id="min-scale-value">0.5</span></div>
+        <div>
+            <input id="min-scale"
+                   type="range"
+                   min="0.25"
+                   max="1"
+                   step="0.01"
+                   value="0.5">
+        </div>
+    </div>
+
+</model-viewer>
+
+<script>
+const reportedDpr = document.querySelector('#reportedDpr');
+const renderedDpr = document.querySelector('#renderedDpr');
+const minimumDpr = document.querySelector('#minimumDpr');
+const pixelWidth = document.querySelector('#pixelWidth');
+const pixelHeight = document.querySelector('#pixelHeight');
+const reason = document.querySelector('#reason');
+
+document.querySelector('#scale').addEventListener('render-scale', (event) => {
+    reportedDpr.textContent = event.detail.reportedDpr;
+    renderedDpr.textContent = event.detail.renderedDpr;
+    minimumDpr.textContent = event.detail.minimumDpr;
+    pixelWidth.textContent = event.detail.pixelWidth;
+    pixelHeight.textContent = event.detail.pixelHeight;
+    reason.textContent = event.detail.reason;
+});
+
+const setup = () => {
+    const minScale = document.querySelector('#min-scale-value');
+    const ModelViewerStatic = customElements.get('model-viewer');
+
+    document.querySelector('#min-scale').addEventListener('input', (event) => {
+        ModelViewerStatic.minimumRenderScale = event.target.value;
+        minScale.textContent = event.target.value;
+    });
+};
+
+customElements.whenDefined('model-viewer').then(setup);
+</script>
+
+</body>
+</html>
